@@ -6,22 +6,21 @@ using namespace std;
 bool build_mobile(int &weight)
 {
     int twl, tdl, twr, tdr;
-    bool left, right; //左右天平是否平衡
+    bool left=true, right=true; //左右天平是否平衡
     cin >> twl >> tdl >> twr >> tdr;
-    cout<<twl<<" "<<tdl<<" "<<twr<<" "<<tdr<<endl;
+    //cout<<twl<<" "<<tdl<<" "<<twr<<" "<<tdr<<endl;
     if (twl == 0)
     {
-        cout<<"build left"<<endl;
+        //cout<<"build left"<<endl;
         left = build_mobile(twl);
     }
-    if (!left)
-        return false;
-    if (twl == 0)
+    if (twr == 0)
     {
         right = build_mobile(twr);
     }
-    if (!right)
-        return false;
+    weight=twl+twr;//这里传进来的weight一定是0，因为只有是0才会构建子树
+    return left && right && (twl * tdl == twr *tdr);
+    /*cout<<"weight left "<<twl*tdl<<" right "<<twr*tdr<<endl;
     if (twl * tdl != twr * tdr)
     {
         return false;
@@ -31,26 +30,25 @@ bool build_mobile(int &weight)
         weight += twl;
         weight += twr;
         return true;
-    }
+    }*/
 }
 
 int main()
 {
-    int n;
-    cin>>n;
-    for(int i=0;i<n;i++)
+    int T,W=0;
+    cin>>T;
+    while(T--)
     {
-        int weight=0;
-        bool result = build_mobile(weight);
-        if(result) 
+        if(build_mobile(W))
         {
-            cout<<"YES"<<endl;
+            cout<<"YES\n";
         }
         else
         {
-            cout<<"NO"<<endl;
+            cout<<"NO\n";
         }
+        if(T) cout<<endl;
     }
-    getchar();
-    getchar();
+    /*getchar();
+    getchar();*/
 }
