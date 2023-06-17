@@ -76,24 +76,23 @@
 class Solution {
 public:
     int removeDuplicates(vector<int>& nums) {
-        unordered_map<int, int> hashtable;
-        vector<int>::iterator it = nums.begin();
-        while(it != nums.end())
+        int fast = 1;
+        int slow = 1;
+        int n = nums.size();
+        if(n <= 1)
         {
-            cout << *it << endl;
-            if(hashtable.find(*it) != hashtable.end())
-            {
-                it = nums.erase(it);
-            }
-            else
-            {
-                hashtable[*it] = 1;
-                it++;
-                //continue;
-            }
-            //it ++;
+            return n;
         }
-        return nums.size();
+        while(fast < n)
+        {
+            if(nums[fast] != nums[fast - 1])
+            {
+                nums[slow] = nums[fast];
+                slow ++;
+            }
+            fast ++;
+        }
+        return slow;
     }
 };
 // @lc code=end
