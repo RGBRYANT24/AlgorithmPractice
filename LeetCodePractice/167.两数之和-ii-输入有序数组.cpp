@@ -64,20 +64,19 @@
 class Solution {
 public:
     vector<int> twoSum(vector<int>& numbers, int target) {
-        unordered_map<int, int> hashtable;
-        for(int i = 0; i < numbers.size(); i ++)
+        int fast = numbers.size() - 1;
+        int slow = 0;
+        int n = numbers.size();
+        while(slow < fast)
         {
-            if(hashtable.find(target - numbers[i]) != hashtable.end())
+            int sum = numbers[slow] + numbers[fast];
+            if(sum == target)
             {
-                return {hashtable[target - numbers[i]], i + 1};
+                return {slow + 1, fast + 1};
             }
-            else
-            {
-                hashtable[numbers[i]] = i + 1;
-                //cout << hashtable[numbers[i]] << endl;
-            }
+            sum > target ? fast -- : slow ++;
         }
-        return {0, 0};
+        return {-1, -1};
     }
 };
 // @lc code=end
