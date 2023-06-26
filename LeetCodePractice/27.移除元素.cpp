@@ -76,18 +76,21 @@
 class Solution {
 public:
     int removeElement(vector<int>& nums, int val) {
-        int right = nums.size() - 1;
-        int left = 0;
-        while(left <= right)
+        int left = 1;
+        int right = 1;
+        if(nums.size() <= 1)
         {
-            //cout << left << endl;
-            if(nums[left] == val)
+            return nums.size();
+        }
+        while(right < nums.size())
+        {
+            if(nums[right] != nums[right - 1])
             {
-                nums[left] = nums[right --];
+                nums[left ++] = nums[right ++];
             }
             else
             {
-                left ++;
+                right ++;
             }
         }
         return left;
