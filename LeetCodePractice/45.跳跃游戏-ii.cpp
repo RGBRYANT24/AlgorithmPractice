@@ -60,23 +60,20 @@ class Solution {
 public:
     int jump(vector<int>& nums) {
         int n = nums.size();
-        int dp[n + 5];
-        memset(dp, 0, sizeof(dp));
-        for(int i = 1; i < n + 5; i ++)
+        int max_reach = 0;
+        int end = 0;
+        int step = 0;
+        for(int i = 0; i < n - 1; i ++) // 因为找的是最少次数，所以最后一跳的边界一定是大于等于最后一个原素的
         {
-            dp[i] = 1e9;
-        }
-        for(int i = 1; i < n; i ++)
-        {
-            for(int j = 0; j < i; j ++)
+            max_reach = max(max_reach, i + nums[i]);
+            if(i == end)
             {
-                if(nums[j] + j >= i)
-                {
-                    dp[i] = min(dp[i], dp[j] + 1);
-                }
+                // cout << i << " " << max_reach << endl;
+                end = max_reach;
+                step ++; 
             }
         }
-        return dp[n - 1];
+        return step;
 
     }
 };
