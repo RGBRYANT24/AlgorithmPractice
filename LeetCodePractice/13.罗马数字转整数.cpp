@@ -92,44 +92,32 @@
 // @lc code=start
 class Solution {
 public:
-     bool check(string s1, string s2)
-    {
-        return s1 == s2 ? true : false;
-    }
     int romanToInt(string s) {
-        const pair<string, int> table[] = {
-            {"M", 1000},
-            {"CM", 900},
-            {"D", 500},
-            {"CD", 400},
-            {"C", 100},
-            {"XC", 90},
-            {"L", 50},
-            {"XL", 40},
-            {"X", 10},
-            {"IX", 9},
-            {"V", 5},
-            {"IV", 4},
-            {"I", 1},
-        };
+        unordered_map<char, int> table = {
+        {'I', 1},
+        {'V', 5},
+        {'X', 10},
+        {'L', 50},
+        {'C', 100},
+        {'D', 500},
+        {'M', 1000},
+    };
        
         int i = 0, j = 0;
         int n = s.length();
         int ans = 0;
-        while(i < n)
+        for(int i = 0; i < n; i ++)
         {
-            int temp = 0;
-            for(auto& [str, num] : table)
+            int val = table[s[i]];
+
+            if(i < n - 1 && val < table[s[i + 1]])
             {
-                temp = num;
-                string new_str = s.substr(i, str.length());
-                if(check(new_str, str))
-                {
-                    i = i + str.length();
-                    break;
-                }
+                ans -= val;
             }
-            ans += temp;
+            else
+            {
+                ans += val;
+            }
         }
         return ans;
     }
