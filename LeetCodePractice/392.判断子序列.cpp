@@ -59,17 +59,44 @@
 class Solution {
 public:
     bool isSubsequence(string s, string t) {
-        int i = 0, j = 0;
         int n = s.length(), m = t.length();
-        while(i < n && j < m)
+        int dp[m + 5][30];
+        memset(dp, 0, sizeof(dp));
+        for(int i = 0; i < 30; i ++)
         {
-            if(s[i] == t[j])
-            {
-                i ++;
-            }
-            j ++;
+            dp[m][i] = m;
         }
-        return i == n;
+        for(int i = m - 1; i >= 0; i --)
+        {
+            int index = int(t[i] - 'a');
+            for(int j = 0; j < 30; j ++)
+            {
+                if(index == j)
+                {
+                    dp[i][j] = i;
+                }
+                else
+                {
+                    dp[i][j] = dp[i + 1][j];
+                }
+            }
+        }
+        int i = 0, j = 0;
+        while(i < m && j < n)
+        {
+            i = dp[i][s[j] - 'a'];
+            // cout << i << " " << j << endl;
+            if(i < m)
+            {
+                j ++;
+                i ++; //注意i是匹配当前字符s[j], 匹配完了之后要用i+1 匹配j + 1
+            }
+            else
+            {
+                return false;
+            }
+        }
+        return j == n;
     }
 };
 // @lc code=end
