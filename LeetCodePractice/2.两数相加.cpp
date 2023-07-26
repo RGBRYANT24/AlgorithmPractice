@@ -69,47 +69,39 @@
 class Solution {
 public:
     ListNode* addTwoNumbers(ListNode* l1, ListNode* l2) {
-         ListNode* p1 = l1;
-        ListNode* p2 = l2;
-        ListNode* head = new ListNode();
-        ListNode* p = head;
-        int next = 0;
-        while(p1 != nullptr && p2 != nullptr)
+        ListNode *head = nullptr, *tail = nullptr;
+        int carry = 0, sum = 0;
+        while(l1 || l2)
         {
-            int temp = p1 -> val + p2 -> val + next;
-            
-            next = temp / 10;
-            temp %= 10;
-            // cout << p1 -> val << " " << p2 -> val << " " << temp << " " << next << endl;
-            p1 = p1 -> next;
-            p2 = p2 -> next;
-            p -> next = new ListNode(temp);
-            p = p -> next;
+            int v1 = l1 ? l1 -> val : 0;
+            int v2 = l2 ? l2 -> val : 0;
+            sum = v1 + v2 + carry;
+            carry = sum / 10;
+            sum %= 10;
+            if(head == nullptr)
+            {
+                head = tail = new ListNode(sum);
+            }
+            else
+            {
+                //cout << v1 << " " << v2 << " " << sum << " " << carry << endl;
+                tail -> next = new ListNode(sum);
+                tail = tail -> next;
+            }
+            if(l1)
+            {
+                l1 = l1 -> next;
+            }
+            if(l2)
+            {
+                l2 = l2 -> next;
+            }
         }
-        while(p1 != nullptr)
+        if(carry)
         {
-            int temp = p1 -> val + next;
-            next = temp / 10;
-            temp %= 10;
-            p1 = p1 -> next;
-            p -> next = new ListNode(temp);
-            p = p -> next;
-            
+            tail -> next = new ListNode(carry);
         }
-        while(p2 != nullptr)
-        {
-            int temp = p2 -> val + next;
-            next = temp / 10;
-            temp %= 10;
-            p2 = p2 -> next;
-            p -> next = new ListNode(temp);
-            p = p -> next;
-        }
-        if(next > 0)
-        {
-            p -> next = new ListNode(next);
-        }
-        return head -> next;
+        return head;
 
     }
 };
