@@ -71,41 +71,26 @@
 // @lc code=start
 class Solution {
 public:
-    int cal(int& count, const int& numRows)
-    {
-        int ans;
-        if(count > numRows - 1)
-        {
-            ans = -count - 2 + numRows * 2;
-        }
-        else
-        {
-            //cout << count << " " << numRows << endl;
-            ans = count;
-        }
-        count ++;
-        count %= (2 * numRows - 2);
-        return ans;
-    }
     string convert(string s, int numRows) {
-        string str[1005];
         string ans;
+        int t = 2 * numRows - 2;
         int n = s.length();
-        int count = 0;
-        if(numRows == 1)
+        cout << t << endl;
+        if(numRows <= 1)
         {
             return s;
         }
-        for(int i = 0; i < n; i ++)
-        {
-            int row = cal(count, numRows);
-            cout << row << " ";
-            str[row] += s[i];
-        }
-        cout << endl;
         for(int i = 0; i < numRows; i ++)
         {
-            ans += str[i];
+            for(int j = 0; j + i < n; j += t)
+            {
+                //cout << j + i << " ";
+                ans += s[j + i];
+                if(i > 0 && i < numRows - 1 && j + t - i < n)
+                {
+                    ans += s[j + t - i];
+                }
+            }
         }
         return ans;
     }
