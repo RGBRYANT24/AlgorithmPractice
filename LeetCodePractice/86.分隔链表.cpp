@@ -59,45 +59,28 @@
 class Solution {
 public:
     ListNode* partition(ListNode* head, int x) {
-        ListNode *dummybig = new ListNode();
-        ListNode *dummyhead = new ListNode();
-        ListNode *pbig = dummybig;
-        ListNode *p = dummyhead, *px;
-        p -> next = head;
-        while(p -> next)
+        ListNode *smallhead = new ListNode();
+        ListNode *bighead = new ListNode();
+        ListNode *big = bighead;
+        ListNode *small = smallhead;
+        ListNode *p = head;
+        while(p)
         {
-            if(p -> next -> val >= x)
+            if(p -> val < x)
             {
-                //cout << "big " << p -> next -> val << endl;
-                pbig -> next = p -> next;
-                p -> next = p -> next -> next;
-                pbig = pbig -> next;
-                pbig -> next = nullptr;
-                
-                //p = p -> next;
+                small -> next = p;
+                small = small -> next;
             }
-            /*else if(p -> next -> val == x)
-            {
-                px = p -> next; 
-                p -> next = p -> next -> next;
-                p = p -> next;
-                px -> next = nullptr;
-                
-                
-            }*/
             else
             {
-                p = p -> next;
+                big -> next = p;
+                big = big -> next;
             }
+            p = p -> next;
         }
-        ListNode *temp = dummyhead -> next;
-        /*while(temp)
-        {
-            cout << temp -> val << " ";
-            temp = temp -> next;
-        }*/
-        p -> next = dummybig -> next;
-        return dummyhead -> next;
+        small -> next = bighead -> next;
+        big -> next = nullptr;
+        return smallhead -> next;
     }
 };
 // @lc code=end
