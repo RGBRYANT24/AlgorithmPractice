@@ -92,24 +92,30 @@ public:
 
 class Solution {
 public:
-    unordered_map <Node*, Node*> cachedNodes;
     Node* copyRandomList(Node* head) {
-        Node *dummyhead = new Node(0);
-        Node *p = head;
-        Node *newp = dummyhead;
-        while(p)
+        Node* p = head;
+        while(p) //在原来节点上插入复制的节点
         {
-            newp -> next = new Node(p -> val);
-            cachedNodes[p] = newp -> next;
-            newp = newp -> next;
-            p = p -> next;
+            Node *temp = new Node(p -> val);
+            temp -> next = p -> next;
+            p -> next = temp;
+            p = p -> next -> next;
         }
         p = head;
-        newp = dummyhead -> next;
+        while(p)//添加random节点
+        {
+            Node *temp = p -> next;
+            temp -> random = p -> random ? p -> random -> next : NULL;
+            p = p -> next -> next;
+        }
+        Node *dummyhead = new Node(0);
+        Node *newp = dummyhead;
+        p = head;
         while(p)
         {
-            newp -> random = cachedNodes[p -> random];
+            newp -> next = p -> next;
             newp = newp -> next;
+            p -> next = p -> next -> next;
             p = p -> next;
         }
         return dummyhead -> next;
