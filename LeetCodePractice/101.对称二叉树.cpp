@@ -60,14 +60,22 @@
  */
 class Solution {
 public:
-    bool check(TreeNode*p, TreeNode* q)
-    {
-        if(!p && !q) return true;
-        if((p && !q) || (!p && q)) return false;
-        return (p -> val == q -> val) && check(p -> right, q -> left) && check(p -> left, q -> right);
-    }
     bool isSymmetric(TreeNode* root) {
-        return root ? check(root -> left, root -> right) : true;
+        queue<pair<TreeNode*, TreeNode*>> que;
+        if(!root) return true;
+        que.push({root -> left, root -> right});
+        while(!que.empty())
+        {
+            TreeNode *p, *q;
+            p = que.front().first;
+            q = que.front().second;
+            que.pop();
+            if(!q && ! p) continue;
+            if((!q || !p) || p -> val != q -> val) return false;
+            que.push({p -> right, q -> left});
+            que.push({p -> left, q -> right});
+        }
+        return true;
     }
 };
 // @lc code=end
