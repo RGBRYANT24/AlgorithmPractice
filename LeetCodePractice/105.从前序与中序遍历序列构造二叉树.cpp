@@ -62,24 +62,33 @@
  */
 class Solution {
 public:
-    unordered_map<int, int> index;
-    TreeNode* buildSubtree(vector<int>& preorder, vector<int>& inorder, int pre_l, int pre_r, int in_l, int in_r)
-    {
-        if(pre_l > pre_r) return nullptr;
-
-        int root_index = index[preorder[pre_l]];
-        TreeNode *root = new TreeNode(preorder[pre_l]);
-        int tree_size = root_index - in_l;
-        root -> left = buildSubtree(preorder, inorder, pre_l + 1, pre_l + tree_size, in_l, root_index - 1);
-        root -> right = buildSubtree(preorder, inorder, pre_l + 1 + tree_size, pre_r, root_index + 1, in_r);
-        return root;
-    }
     TreeNode* buildTree(vector<int>& preorder, vector<int>& inorder) {
-        for(int i = 0; i < inorder.size(); i++)
+        if(!preorder.size()) return nullptr;
+        stack<TreeNode*> stk;
+        TreeNode *root = new TreeNode(preorder[0]);
+        stk.push(root);
+        int index = 0;
+        for(int i = 1; i < preorder.size(); i ++)
         {
-            index[inorder[i]] = i;
+            TreeNode *node = stk.top();
+            if(inorder[index] != stk.top() -> val)
+            {
+                node -> left = new TreeNode(preorder[i]);
+                stk.push(node -> left);
+            }
+            else
+            {
+                while(!stk.empty() && stk.top() -> val == inorder[index])
+                {
+                    index ++;
+                    node = stk.top();
+                    stk.pop();
+                }
+                node -> right = new TreeNode(preorder[i]);
+                stk.push(node -> right);
+            }
         }
-        return buildSubtree(preorder, inorder, 0, inorder.size() - 1, 0, inorder.size() - 1);
+        return root;
 
     }
 };
