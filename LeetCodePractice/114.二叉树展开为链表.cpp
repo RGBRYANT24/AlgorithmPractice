@@ -73,26 +73,33 @@
 class Solution {
 public:
     void flatten(TreeNode* root) {
-        stack<TreeNode*> stk;
-        if(!root) return;
-        stk.push(root);
-        TreeNode* pre = root;
-        while(!stk.empty())
+        TreeNode* cur = root;
+        while(cur)
         {
-            TreeNode* node = stk.top();
-            stk.pop();
-            if(node != root)
+            //cout <<"cur " << cur -> val << endl;
+            if(cur -> left)
             {
-                pre -> right = node;
-                pre = node;
+                TreeNode* next = cur -> left;
+                //cout << next -> val <<endl;
+                TreeNode* pre = next;
+                // if(next) pre = next -> right;
+                while(pre -> right != nullptr)
+                {
+                    pre = pre -> right;
+                }
+                pre -> right = cur -> right;
+                cur -> left = nullptr;
+                //cout << cur -> val << " " << next -> val << " " << pre -> val <<endl;
+                cur -> right = next;
+                
+                cur = next;
             }
-            if(node -> right) stk.push(node -> right);
-            if(node -> left) stk.push(node -> left);
-            node -> left = nullptr;
-            node -> right = nullptr;
-            
-        }   
-        return;
+            else
+            {  
+                cur = cur -> right;
+
+            }
+        }
     }
 };
 // @lc code=end
