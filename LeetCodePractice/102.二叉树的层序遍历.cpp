@@ -19,36 +19,25 @@
 class Solution {
 public:
     vector<vector<int>> levelOrder(TreeNode* root) {
-        vector<int> d; //存储每个节点的高度
+        if(!root) return {};
         vector<vector<int>> ans;
-        if(root == nullptr) return ans;
-        queue<TreeNode *> q;
+        queue<TreeNode*> q;
         q.push(root);
-        d.push_back(0);
-        int id = 0;
-        while (!q.empty())
+        while(!q.empty())
         {
-            TreeNode *p = q.front();
-            q.pop();
-            if (d[id] >= ans.size())
+            int n = q.size();
+            vector<int> a;
+            for(int i = 0;i < n; i ++)
             {
-                ans.push_back(vector<int>{});
+                TreeNode* node = q.front();
+                q.pop();
+                a.push_back(node -> val);
+                if(node -> left) q.push(node -> left);
+                if(node -> right) q.push(node -> right);
             }
-            if (p->left != nullptr)
-            {
-                q.push(p->left);
-                d.push_back(d[id] + 1); //存储他们的高度是父节点+1
-            }
-            if (p->right != nullptr)
-            {
-                q.push(p->right);
-                d.push_back(d[id] + 1); //存储他们的高度是父节点+1
-            }
-            ans[d[id]].push_back(p->val);
-            id++;
+            ans.push_back(a);
         }
         return ans;
-    }
 };
 // @lc code=end
 
