@@ -20,40 +20,34 @@ class Solution {
 public:
     vector<vector<int>> zigzagLevelOrder(TreeNode* root) 
     {
+        bool re = true;
+        if(!root) return {};
+        vector<vector<int>> ans;
         queue<TreeNode*> q;
         q.push(root);
-        vector<int> d;
-        int id = 0;
-        d.push_back(0);
-        vector<vector<int>> ans;
-        if(root == nullptr) return ans;
-        while(!q.empty())
+        while(q.size() > 0)
         {
-            TreeNode* u = q.front();
-            q.pop();
-            if(d[id] >= ans.size())
+            int n = q.size();
+           deque<int> levelList;
+            for(int i = 0; i < n; i ++)
             {
-                ans.push_back(vector<int> {});
+                TreeNode* node = q.front();
+                //q.erase(q.begin());
+                q.pop();
+                //temp.push(node -> val);
+                if(node -> left) q.push(node -> left);
+                if(node -> right) q.push(node -> right);
+                if(re)
+                {
+                    levelList.push_back(node -> val);
+                }
+                else
+                {
+                   levelList.push_front(node -> val);
+                }
             }
-            ans[d[id]].push_back(u -> val);
-            if(u -> left != nullptr)
-            {
-                q.push(u -> left);
-                d.push_back(d[id] + 1);
-            }
-            if(u -> right != nullptr)
-            {
-                q.push(u -> right);
-                d.push_back(d[id] + 1);
-            }
-            id ++;
-        }
-        for(int i = 0; i < ans.size(); i++)
-        {
-            if(i%2 == 1)
-            {
-                reverse(ans[i].begin(), ans[i].end());
-            }
+            ans.push_back(vector<int>(levelList.begin(), levelList.end()));
+            re = !re;
         }
         return ans;
     }
