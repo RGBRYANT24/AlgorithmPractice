@@ -10,14 +10,16 @@ struct TreeNode
     int size; //当前节点为根的子树大小
     int count; //当前节点的重复数量
     //TreeNode(): val(0), left(nullptr), right(nullptr){}
-    TreeNode(int x): key(x), left(nullptr), right(nullptr), size(1){}
+    //TreeNode(int x): key(x), left(nullptr), right(nullptr), size(1){}
 };
 
 TreeNode* insert(TreeNode* root, int val)
 {
     if(root == nullptr) return new TreeNode(val);
-    if(root -> key < val) root -> left = insert(root -> left, val);
-    if(root -> key > val) root -> right = insert(root -> right, val);
+    cout  << " " << val << endl;
+    //return root;
+    if(root -> key > val) root -> left = insert(root -> left, val);
+    else if(root -> key < val) root -> right = insert(root -> right, val);
     else root -> count ++;
     return root;
 }
@@ -33,13 +35,14 @@ void inorderTraversal(TreeNode* root)
 
 int main()
 {
-    vector<int> nums = {2, 1, 4};
-    //TreeNode* root;
-    /*for(int i = 0; i < nums.size(); i ++)
+    vector<int> nums = {2};
+    TreeNode* root;
+    cout << int(root == nullptr) << endl;
+    for(int i = 0; i < nums.size(); i ++)
     {
         root = insert(root, nums[i]);
     }
-    inorderTraversal(root);*/
+    //inorderTraversal(root);
     system("pause");
     return 0;
 }
