@@ -5,55 +5,92 @@
  */
 
 // @lc code=start
-class Solution {
+class UnionFind{
+private:
+    vector<int> parent;
+    vector<int> rank;
+    
 public:
-    int dr[4] = {-1, 0, 1, 0};
-    int dc[4] = {0, 1, 0, -1};
-    void solve(vector<vector<char>>& board) {
-        vector<vector<int>> vis;
+    UnionFind(vector<vector<char>>& board)
+    {
         int m = board.size();
         int n = board[0].size();
-        queue<int> s1;//存i
-        queue<int> s2;//存j
         for(int i = 0; i < m; i ++)
         {
-            vis.push_back(vector<int> {});
             for(int j = 0; j < n; j ++)
             {
-                vis[i].push_back(0);
-                if((i == 0 || j == 0 || i == m - 1  || j == n - 1) && (board[i][j] == 'O'))
+                if(board[i][j] == 'O')
                 {
-                    s1.push(i);
-                    s2.push(j);
+                    parent.push_back(i * n + j);
                 }
+                else
+                {
+                    parent.push_back(-1);
+                }
+                rank.push_back(0);
             }
         }
-        while(!s1.empty())
+        parent.push_back(m * n);
+        rank.push_back(0);
+    }
+
+    int find(int x)
+    {
+        if(parent[x] != x) parent[x] = find(parent[x]);
+        return parent[x];
+    }
+
+    void unite(int x, int y)
+    {
+        int rootx = find(x), rooty = find(y);
+        if(rank[rootx] < rank[rooty])
         {
-            int i = s1.front();
-            int j = s2.front();
-            s1.pop();
-            s2.pop();
-            vis[i][j] = 1;
-            for(int k = 0; k < 4; k++)
-            {
-                int nexti = i + dr[k];
-                int nextj = j + dc[k];
-                if (nexti >= 0 && nexti < m && nextj >= 0 && nextj < n && board[nexti][nextj] == 'O' && !vis[nexti][nextj])
-                {
-                    s1.push(nexti);
-                    s2.push(nextj);
-                }
-            }
+            swap(rootx, rooty);
         }
-        for (int i = 0; i < m; i++)
+        parent[rooty] = rootx;
+        rank[rootx] += rank[rooty];
+    }
+
+    bool isConnected(int node1, int node2)
+    {
+        return find(node1) == find(node2);
+    }
+};
+
+
+class Solution {
+public:
+    void solve(vector<vector<char>>& board) {
+        UnionFind uf = UnionFind(board);
+        int m = board.size();
+        int n = board[0].size();
+        int dummyHead = m * n;
+        for(int i = 0; i < m; i ++)
         {
-            for (int j = 0; j < n; j++)
+            for(int j = 0; j < n; j ++)
             {
-                if (!vis[i][j] && board[i][j] == 'O')
+                if(board[i][j] == 'O')
+                {
+                    if(i == 0 || i == m - 1 || j == 0 || j == n - 1)
                     {
-                        board[i][j] = 'X';
+                        uf.unite(i * n + j, dummyHead);//边界点连接
                     }
+                    if(i + 1 < m && board[i + 1][j] == 'O') uf.unite((i + 1) * n + j, i * n + j);
+                    if(j + 1 < n && board[i][j + 1] == 'O') uf.unite(i * n + j + 1, i * n + j);
+                    if(i - 1 >= 0 && board[i - 1][j] == 'O') uf.unite((i - 1) * n + j, i * n + j);
+                    if(j - 1 >= 0 && board[i][j - 1] == 'O') uf.unite(i * n + j - 1, i * n + j);
+                }
+            }
+        }
+
+        for(int i = 0; i < m; i ++)
+        {
+            for(int j = 0; j < n; j ++)
+            {
+                if(board[i][j] == 'O')
+                {
+                    if(!uf.isConnected(i * n + j, dummyHead)) board[i][j] = 'X';
+                }
             }
         }
     }
