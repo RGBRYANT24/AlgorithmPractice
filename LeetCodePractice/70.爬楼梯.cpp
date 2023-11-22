@@ -52,21 +52,43 @@
 // @lc code=start
 class Solution {
 public:
-    int climbStairs(int n) {
-        int i = 3;
-        int first = 1, second = 2;//第1阶 第2阶
-        if(n == 1) return 1;
-        if(n == 2) return 2;
-        while(i <= n)
+   vector<vector<long long>> multiply(vector<vector<long long>>& a,vector<vector<long long>>& b)
+    {
+        vector<vector<long long>> c(a.size(), vector<long long>(a.size()));
+        for(int i = 0; i < a.size(); i ++)
         {
-            int temp = second;
-            second = second + first;
-            //cout << i << " " << second << endl;
-            first = temp;
-            i ++;
+            for(int j = 0; j < b.size(); j ++)
+            {
+                int temp = 0;
+                for(int k = 0; k < a[i].size(); k ++)
+                {
+                    temp += a[i][k] * b[j][k];
+                }
+                c[i][j] = temp;
+            }
         }
-        return second;
-    
+        return c;
+    }
+
+    vector<vector<long long>> matrixPow(vector<vector<long long>>& a, int n)
+    {
+        vector<vector<long long>> ret = {{1, 0}, {0, 1}};
+        while(n > 0)
+        {
+            if(n % 2 == 1)
+            {
+                ret = multiply(ret, a);
+            }
+            a = multiply(a, a);
+            n >>= 1;
+        }
+        return ret;
+    }
+    int climbStairs(int n) {
+        vector<vector<long long>> ret = {{1, 1}, {1, 0}};
+        vector<vector<long long>> res = matrixPow(ret, n);
+        return res[0][0];
+        
     }
 };
 // @lc code=end
