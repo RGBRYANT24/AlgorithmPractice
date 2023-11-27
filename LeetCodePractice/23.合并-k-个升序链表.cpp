@@ -73,56 +73,41 @@
  */
 class Solution {
 public:
-    ListNode* mergeKLists(vector<ListNode*>& lists) {
-        ListNode* ans = nullptr;
-        ListNode* dummyHead = new ListNode(0);
-        dummyHead -> next = ans;
-        bool flag = true;
-        int n = lists.size();
-        while(flag)
+    ListNode* merge2Lists(ListNode* a, ListNode* b)
+    {
+        if((!a) || (!b)) return a ? a : b;
+        ListNode* head = new ListNode();
+        ListNode* tail = head;
+        ListNode *pa = a, *pb = b;
+        while(pa != nullptr && pb != nullptr)
         {
-            int id = -1;
-            int count = 0;
-            int min_num = INT_MAX;
-            for(int i = 0; i < n; i ++)
+            if(pa -> val < pb -> val)
             {
-                
-                
-                // ListNode* p = lists[i];
-                if(!lists[i])
-                {
-                    count ++;
-                    continue;
-                }
-                else if(min_num > lists[i] -> val)
-                {
-                    //cout << i << " " << lists[i] -> val << " " << min_num ;
-                    id = i;
-                    min_num = lists[i] -> val;
-                    //cout << " change " << min_num << endl;
-                    
-                }
-            }
-            ;
-            if(count == n) return dummyHead -> next;
-            if(!ans) 
-            {
-                ans = lists[id];
-                dummyHead -> next = ans;
-                //cout << " ans " << ans -> val << endl;
+                tail -> next = pa;
+                pa = pa -> next;
             }
             else
             {
-                ans -> next = lists[id];
-                ans = ans -> next;
-                //cout << " ans " << ans -> val << endl;
+                tail -> next = pb;
+                pb = pb -> next;
             }
-            lists[id] = lists[id] -> next;
-            //cout << endl;
-            
-
+            tail = tail -> next;
         }
-        return dummyHead -> next;
+        if(!pa) tail -> next = pb;
+        else tail -> next = pa;
+        return head -> next;
+    }
+
+    ListNode* mergeLists(vector<ListNode*>& lists, int l, int r)
+    {
+        if(l == r) return lists[l];
+        if(l > r) return nullptr;
+        int mid = (l + r) >> 1;
+        return merge2Lists(mergeLists(lists, l, mid), mergeLists(lists, mid + 1, r));
+    }
+
+    ListNode* mergeKLists(vector<ListNode*>& lists) {
+       return mergeLists(lists, 0, lists.size() - 1);
     }
 };
 // @lc code=end
